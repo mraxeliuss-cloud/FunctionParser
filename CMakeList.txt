@@ -1,0 +1,58 @@
+cmake_minimum_required(VERSION 3.20)
+project(FunctionParser VERSION 1.0.0 LANGUAGES CXX)
+
+# Estándar C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Exportar compile_commands.json (para clangd, IntelliSense, etc.)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Opciones de build (por defecto biblioteca estática)
+option(BUILD_SHARED_LIBS "Build shared library" OFF)
+option(BUILD_TESTS "Build tests" ON)
+option(BUILD_EXAMPLES "Build examples" ON)
+
+# ---------- BIBLIOTECA PRINCIPAL ----------
+add_library(FunctionParser
+    src/Parser.cpp
+    src/Lexer.cpp
+    src/Expression.cpp
+    src/Error.cpp
+    # añade más .cpp aquí
+)
+
+# Directorios de inclusión públicos
+target_include_directories(FunctionParser
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+# Alias para uso interno (opcional)
+add_library(FunctionParser::FunctionParser ALIAS FunctionParser)
+
+# ---------- EJECUTABLE DE EJEMPLO (CLI) ----------
+if(BUILD_EXAMPLES)
+    add_executable(parser_cli examples/example_cli.cpp)
+    target_link_libraries(parser_cli PRIVATE FunctionParser)
+endif()
+
+# ---------- TESTS (usando Catch2 o doctest, por ejemplo) ----------
+if(BUILD_TESTS)
+    # Si no tienes un framework de pruebas, puedes empezar con un main simple
+    add_executable(parser_tests tests/test_main.cpp)
+    target_link_libraries(parser_tests PRIVATE FunctionParser)
+endif()
+
+# ---------- INSTALACIÓN (opcional) ----------
+install(TARGETS FunctionParser
+    EXPORT FunctionParserTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+)
+
+install(DIRECTORY include/ DESTINATION include)
