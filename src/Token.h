@@ -13,10 +13,12 @@ enum class TokenType
     MULT,
     DIVIDE,
     POW,
-    ROOT,
+    NRT,
     SIN,
     COS,
     TAN,
+    EXP,
+    LOG,
     // FIN OPERADORES
 
     ABRE_PARENTESIS,
@@ -32,11 +34,11 @@ struct Token
 {
     TokenType tipo;
     std::variant<double, char> valor;
-    
+
     // Constructor para números
     Token(double num) : tipo(TokenType::NUMERO), valor(num) {}
     // Constructor para variables
     Token(char var) : tipo(TokenType::VARIABLE), valor(var) {}
-    // Constructor para tokens sin valor (operadores, paréntesis, etc.)
+    // Constructor para tokens sin valor
     Token(TokenType t) : tipo(t), valor(0.0) {}
 };
