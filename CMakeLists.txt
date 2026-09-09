@@ -14,11 +14,7 @@ option(BUILD_EXAMPLES "Build examples" ON)
 
 # Biblioteca principal
 add_library(FunctionParser
-    src/Parser.cpp
-    src/Lexer.cpp
-    src/Expression.cpp
-    src/Error.cpp
-    # añade más .cpp aquí
+# aún vacío, TBI
 )
 
 # Directorios de inclusión públicos

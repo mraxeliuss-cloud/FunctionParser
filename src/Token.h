@@ -34,11 +34,12 @@ struct Token
 {
     TokenType tipo;
     std::variant<double, char> valor;
+    size_t posicion;
 
     // Constructor para números
-    Token(double num) : tipo(TokenType::NUMERO), valor(num) {}
+    Token(double num, size_t pos) : tipo(TokenType::NUMERO), valor(num), posicion(pos) {}
     // Constructor para variables
-    Token(char var) : tipo(TokenType::VARIABLE), valor(var) {}
+    Token(char var, size_t pos) : tipo(TokenType::VARIABLE), valor(var), posicion(pos) {}
     // Constructor para tokens sin valor
-    Token(TokenType t) : tipo(t), valor(0.0) {}
+    Token(TokenType t, size_t pos) : tipo(t), valor(0.0), posicion(pos) {}
 };

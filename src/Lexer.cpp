@@ -1,30 +1,31 @@
 // Namespace anónimo y oculto, solo como helper
 #include "Token.h"
+#include "Excepciones.h"
 
+#include <cctype>
+#include <string>
 #include <cstddef>
 #include <charconv>
 #include <vector>
 #include <unordered_map>
 #include <string_view>
-#include <algorithm>
 
+// TBD: Incluir excepciones personalizadas para cada error, con mensaje y posición específica
+// Esto permite idenificar mejor los errores, además de ubicarlos, así es más user-friendly
 namespace
 {
     Token tokenNumero(const std::string &expresion, size_t &pos)
     {
         size_t start = pos;
         bool hayPunto = false;
-        if (!(expresion[start] >= '0' && expresion[start] <= '9'))
-        {
-            // Error, no hay dígitos
-        }
+
         while (pos < expresion.size() && ((expresion[pos] >= '0' && expresion[pos] <= '9') || expresion[pos] == '.'))
         {
             if (expresion[pos] == '.')
             {
                 if (hayPunto)
                 {
-                    // Error, más de 1 punto
+                    throw ErrorLexico("Hay más de 1 punto decimal", pos); 
                 }
                 hayPunto = true;
             }
@@ -35,48 +36,49 @@ namespace
         auto resultado = std::from_chars(expresion.data() + start, expresion.data() + pos, numero);
         if (resultado.ec != std::errc())
         {
-            // Error de evaluación
+            throw ErrorLexico("El número no es válido",start);
         }
-        return Token(numero);
+        return Token(numero, start);
     }
-    //
-    Token tokenSimbolo(const char caracter)
+
+    Token tokenSimbolo(const char caracter, size_t posicion)
     {
         switch (caracter)
         {
         case '+':
-            return Token(TokenType::ADD);
+            return Token(TokenType::ADD, posicion);
         case '-':
-            return Token(TokenType::SUB);
+            return Token(TokenType::SUB, posicion);
         case '*':
-            return Token(TokenType::MULT);
+            return Token(TokenType::MULT, posicion);
         case '/':
-            return Token(TokenType::DIVIDE);
+            return Token(TokenType::DIVIDE, posicion);
         default:
-            // return Error no es operador
+            throw ErrorLexico("No es un operador", posicion);
         }
     }
-    Token tokenCaracterEspecial(const char caracter)
+
+    Token tokenCaracterEspecial(const char caracter, size_t posicion)
     {
         switch (caracter)
         {
         case ',':
-            return Token(TokenType::COMA);
+            return Token(TokenType::COMA, posicion);
         case ';':
-            return Token(TokenType::FIN_SECUENCIA);
+            return Token(TokenType::FIN_SECUENCIA, posicion);
         case '(':
-            return Token(TokenType::ABRE_PARENTESIS);
+            return Token(TokenType::ABRE_PARENTESIS, posicion);
         case ')':
-            return Token(TokenType::CIERRA_PARENTESIS);
+            return Token(TokenType::CIERRA_PARENTESIS, posicion);
         case '=':
-            return Token(TokenType::IGUALDAD);
+            return Token(TokenType::IGUALDAD, posicion);
         default:
-            // return Error no es caracter especial
+            throw ErrorLexico("No es un caracter especial esperado", posicion);
         }
     }
 
     // Mapeo de funciones
-    static const std::unordered_map<std::string_view, TokenType> funcionMap = {
+    const std::unordered_map<std::string_view, TokenType> funcionMap = {
         // first es la string
         // second es el tokentype
         {"sin", TokenType::SIN},
@@ -105,54 +107,49 @@ namespace
         if (it != funcionMap.end())
         {
             // Second es el TokenType
-            return Token(it->second);
+            return Token(it->second, start);
         }
         if (palabra == "x" || palabra == "y" || palabra == "z")
         {
-            return Token(palabra[0]);
+            return Token(palabra[0], start);
         }
-        // throw error si no es ninguna
-    }
-    std::string &limpiarEspacios(std::string &expresion)
-    {
-        expresion.erase(std::remove_if(expresion.begin(), expresion.end(), ::isspace), expresion.end());
-        return expresion;
+        throw ErrorLexico("La función no está definida", start);
     }
 }
 namespace Lexer
 {
 
-    std::vector<Token> Tokenizar(std::string &expresionInput)
+    std::vector<Token> Tokenizar(const std::string &expresionInput)
     {
-        std::string expresion = expresionInput;
+        
         size_t i = 0;
         std::vector<Token> tokens;
-        tokens.reserve(expresion.size() / 3);
-        expresion = limpiarEspacios(expresion);
-        while (i < expresion.size())
+        tokens.reserve(expresionInput.size() / 3);
+        while (i < expresionInput.size())
         {
-            char c = expresion[i];
+            char c = expresionInput[i];
+            if (std::isspace(static_cast<unsigned char>(c))) { ++i; continue; }
             if (std::isdigit(static_cast<unsigned char>(c)))
             {
-                tokens.push_back(tokenNumero(expresion, i));
+                tokens.push_back(tokenNumero(expresionInput, i));
             }
             else if (std::isalpha(static_cast<unsigned char>(c)))
             {
-                tokens.push_back(tokenIdentificador(expresion, i));
+                tokens.push_back(tokenIdentificador(expresionInput, i));
             }
             else if (c == '+' || c == '-' || c == '*' || c == '/')
             {
-                tokens.push_back(tokenSimbolo(c));
+                tokens.push_back(tokenSimbolo(c, i));
                 ++i;
             }
             else if (c == '(' || c == ')' || c == ',' || c == '=' || c == ';')
             {
-                tokens.push_back(tokenCaracterEspecial(c));
+                tokens.push_back(tokenCaracterEspecial(c, i));
                 ++i;
             }
             else
             {
-                // throw evaluation_error("Carácter inesperado en la expresión");
+                throw ErrorLexico("Carácter inesperado en la expresión", i);
             }
         }
         return tokens;
