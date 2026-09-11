@@ -12,6 +12,7 @@ enum class TokenType
     SUB,
     MULT,
     DIVIDE,
+    // Por el momento 1-4
     POW,
     NRT,
     SIN,
