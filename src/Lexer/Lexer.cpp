@@ -9,9 +9,9 @@
 #include <vector>
 #include <unordered_map>
 #include <string_view>
+#include <numbers>
 
-// TBD: Incluir excepciones personalizadas para cada error, con mensaje y posición específica
-// Esto permite idenificar mejor los errores, además de ubicarlos, así es más user-friendly
+
 namespace
 {
     Token tokenNumero(const std::string &expresion, size_t &pos)
@@ -109,10 +109,19 @@ namespace
             // Second es el TokenType
             return Token(it->second, start);
         }
+        if (palabra == "pi")
+        {
+            return Token(std::numbers::pi, start);
+        }
+        if (palabra == "e")
+        {
+            return Token(std::numbers::e, start);
+        }
         if (palabra == "x" || palabra == "y" || palabra == "z")
         {
             return Token(palabra[0], start);
         }
+        
         throw ErrorLexico("La función no está definida", start);
     }
 }

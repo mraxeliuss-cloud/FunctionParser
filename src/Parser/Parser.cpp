@@ -8,6 +8,7 @@
 
 #include "Token.h"
 #include "Nodo.h"
+#include "Excepciones.h"
 
 void Parser::ShuntingYard(std::vector<Token> &tokens)
 {
@@ -15,8 +16,10 @@ void Parser::ShuntingYard(std::vector<Token> &tokens)
     std::stack<std::unique_ptr<Nodo>> pilaOperandos;
     for (const auto &elemento : tokens)
     {
-        // Esto son los operadores
-        if (elemento.tipo >= TokenType::ADD && elemento.tipo <= TokenType::DIVIDE)
+        if(elemento.tipo >= TokenType::POW && elemento.tipo <= TokenType::LOG){
+
+        }
+        else if (elemento.tipo >= TokenType::ADD && elemento.tipo <= TokenType::DIVIDE)        // Esto son los operadores
         {
             while (!pilaOperadores.empty() && prioridad(pilaOperadores.top()) >= prioridad(elemento))
             {
@@ -51,5 +54,14 @@ int Parser::prioridad(const Token &token) const
         return 2;
     case TokenType::DIVIDE: // /
         return 2;
+    default:
+        throw ErrorDeFormato("Hay un problema con la expresión", token.posicion);
     }
 }
+/*
+    SIN,
+    COS,
+    TAN,
+    EXP,
+    LOG,
+*/

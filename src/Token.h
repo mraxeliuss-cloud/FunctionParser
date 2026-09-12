@@ -19,7 +19,7 @@ enum class TokenType
     COS,
     TAN,
     EXP,
-    LOG,
+    LOG, // 11
     // FIN OPERADORES
 
     ABRE_PARENTESIS,
