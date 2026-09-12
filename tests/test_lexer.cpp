@@ -1,6 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
-#include "Lexer/Lexer.h"
 #include <numbers>
+
+#include "Lexer/Lexer.h"
+#include "Parser/Parser.h"
 
 TEST_CASE("el lexer produce tres tokens para 2+3")
 {

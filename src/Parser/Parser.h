@@ -18,7 +18,8 @@ public:
 
     std::vector<std::variant<int, float, char, std::string>> parsear(const std::vector<Token> &);
 
-    void ShuntingYard(std::vector<Token> &tokens);
+    std::unique_ptr<Nodo> ShuntingYard(const std::vector<Token> &tokens);
 
-    int prioridad(const Token &token) const;
+    [[nodiscard]] int prioridad(const Token &token) const;
+    [[nodiscard]] int aridad(const Token &token) const;
 };

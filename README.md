@@ -11,4 +11,3 @@ El principal objetivo es aprender el diseño de APIs y librerías, así como ser
 Por el momento, hace una evaluación lexica de las funciones
 Construye un AST con los operadores básicos (+, -, *, /)
 Números, y constantes (e, pi)
-

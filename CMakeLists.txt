@@ -43,8 +43,8 @@ if(BUILD_TESTS)
         GIT_TAG v3.7.1
     )
     FetchContent_MakeAvailable(Catch2)
-
-    add_executable(parser_tests tests/test_lexer.cpp)
+    
+    add_executable(parser_tests tests/test_lexer.cpp tests/test_parser.cpp)
     target_link_libraries(parser_tests PRIVATE FunctionParser Catch2::Catch2WithMain)
     target_include_directories(parser_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

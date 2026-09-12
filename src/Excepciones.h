@@ -20,3 +20,13 @@ struct ErrorNoEsValorEsperado : std::runtime_error
     ErrorNoEsValorEsperado(const std::string &mensaje, size_t posicion) 
         : std::runtime_error(mensaje), posicion(posicion) {}
 };
+struct ErrorParentesis : std::runtime_error{
+    size_t posicion;
+    ErrorParentesis(const std::string &mensaje, size_t posicion)
+        : std::runtime_error(mensaje), posicion(posicion) {}
+};
+struct ErrorDeNodos : std::runtime_error{
+    size_t posicion;
+    ErrorDeNodos(const std::string &mensaje) 
+        : std::runtime_error(mensaje) {}
+};
