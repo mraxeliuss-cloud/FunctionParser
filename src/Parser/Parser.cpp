@@ -33,7 +33,6 @@ namespace
         auto nodo = std::make_unique<Nodo>(sacado, std::move(hijoI), std::move(hijoD));
         pilaOperandos.push(std::move(nodo));
     }
-
 }
 
 std::unique_ptr<Nodo> Parser::ShuntingYard(const std::vector<Token> &tokens)

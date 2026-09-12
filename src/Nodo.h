@@ -8,12 +8,15 @@
 
 struct Nodo
 {
-    std::unique_ptr<Nodo> hijoI;
-    std::unique_ptr<Nodo> hijoD;
-    Token token;
 
-    Nodo(Token token, std::unique_ptr<Nodo> hijoI, std::unique_ptr<Nodo> hijoD) 
-        : token(token), hijoI(std::move(hijoI)), hijoD(std::move(hijoD)) {}
-    // Usas move semantics porque no se pueden copiar los unique_ptr
-    Token getToken() { return token; }
+    Token token;
+    std::vector<std::unique_ptr<Nodo>> hijos;
+    Nodo(const Token &token, std::unique_ptr<Nodo> hijoI, std::unique_ptr<Nodo> hijoD) 
+        : token(token) {
+            if(hijoI != nullptr)
+                hijos.push_back(std::move(hijoI));
+            if(hijoD != nullptr)
+                hijos.push_back(std::move(hijoD));
+        }
+    // Usar move semantics porque no se pueden copiar los unique_ptr
 };

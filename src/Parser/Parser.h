@@ -13,8 +13,6 @@ class Parser
 {
 private:
 public:
-    Parser();
-    ~Parser() = default;
 
     std::vector<std::variant<int, float, char, std::string>> parsear(const std::vector<Token> &);
 
