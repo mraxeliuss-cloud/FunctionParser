@@ -14,3 +14,9 @@ struct ErrorDeFormato : std::runtime_error
     ErrorDeFormato (const std::string &mensaje, size_t posicion)
         : std::runtime_error(mensaje), posicion(posicion) {}
 };
+struct ErrorNoEsValorEsperado : std::runtime_error
+{
+    size_t posicion;
+    ErrorNoEsValorEsperado(const std::string &mensaje, size_t posicion) 
+        : std::runtime_error(mensaje), posicion(posicion) {}
+};

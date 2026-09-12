@@ -4,6 +4,8 @@
 #include <variant>
 #include <string>
 
+#include "Excepciones.h"
+
 enum class TokenType
 {
     // OPERADORES
@@ -43,4 +45,24 @@ struct Token
     Token(char var, size_t pos) : tipo(TokenType::VARIABLE), valor(var), posicion(pos) {}
     // Constructor para tokens sin valor
     Token(TokenType t, size_t pos) : tipo(t), valor(0.0), posicion(pos) {}
+
+    [[nodiscard]] double getValorNumerico() const
+    {
+        if(std::holds_alternative<double>(valor))
+        {
+            return std::get<double>(valor);
+        }else
+        {
+            throw ErrorNoEsValorEsperado("El token no tiene un valor numerico ", posicion);
+        }
+    }
+    [[nodiscard]] char getNombre() const
+    {
+        if(std::holds_alternative<char>(valor)){
+            return std::get<char>(valor);
+        }
+        else{
+            throw ErrorNoEsValorEsperado("El token no tiene un valor de carácter", posicion);
+        }
+    }
 };
