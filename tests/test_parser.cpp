@@ -6,9 +6,9 @@
 
 TEST_CASE("Prueba de los paréntesis")
 {
-    Parser parser;
+    
     auto tokens = Lexer::Tokenizar("pi + (e - 1)");
-    auto nodo = parser.ShuntingYard(tokens);
+    auto nodo = Parser::ShuntingYard(tokens);
     CHECK(nodo->token.tipo == TokenType::ADD);
     CHECK(nodo->hijos[0]->token.getValorNumerico() == std::numbers::pi);
     CHECK(nodo->hijos[1]->token.tipo == TokenType::SUB);
@@ -18,9 +18,9 @@ TEST_CASE("Prueba de los paréntesis")
 
 TEST_CASE("Precedencia sin paréntesis")
 {
-    Parser parser;
+
     auto tokens = Lexer::Tokenizar("3 + 4 * 2");
-    auto nodo = parser.ShuntingYard(tokens);
+    auto nodo = Parser::ShuntingYard(tokens);
     CHECK(nodo->token.tipo == TokenType::ADD);
     CHECK(nodo->hijos[0]->token.getValorNumerico() == 3);
     CHECK(nodo->hijos[1]->token.tipo == TokenType::MULT);
